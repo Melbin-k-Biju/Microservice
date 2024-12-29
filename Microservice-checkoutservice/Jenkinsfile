@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build & Tag Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        // Build the Docker image with the "latest" tag
+                        sh "docker build -t melbin007/checkout:latest ."
+                    }
+                }
+            }
+        }
+        
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        // Push the Docker image to the registry
+                        sh "docker push melbin007/checkout:latest"
+                    }
+                }
+            }
+        }
+    }
+}
